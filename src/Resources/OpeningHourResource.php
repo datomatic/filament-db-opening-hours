@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Datomatic\FilamentDatabaseOpeningHours\Resources;
 
+use Datomatic\DatabaseOpeningHours\Enums\Day;
+use Datomatic\DatabaseOpeningHours\Models\OpeningHour;
+use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\CreateOpeningHour;
+use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\EditOpeningHour;
+use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\ListOpeningHours;
+use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\ViewOpeningHour;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
@@ -15,12 +21,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Datomatic\DatabaseOpeningHours\Enums\Day;
-use Datomatic\DatabaseOpeningHours\Models\OpeningHour;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\CreateOpeningHour;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\EditOpeningHour;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\ListOpeningHours;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\ViewOpeningHour;
 
 final class OpeningHourResource extends Resource
 {

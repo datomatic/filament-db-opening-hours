@@ -2,10 +2,8 @@
 
 namespace Datomatic\FilamentDatabaseOpeningHours;
 
-use Filament\Support\Assets\AlpineComponent;
+use Datomatic\FilamentDatabaseOpeningHours\Testing\TestsFilamentDatabaseOpeningHours;
 use Filament\Support\Assets\Asset;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
@@ -13,8 +11,6 @@ use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Datomatic\FilamentDatabaseOpeningHours\Commands\FilamentDatabaseOpeningHoursCommand;
-use Datomatic\FilamentDatabaseOpeningHours\Testing\TestsFilamentDatabaseOpeningHours;
 
 class FilamentDatabaseOpeningHoursServiceProvider extends PackageServiceProvider
 {
@@ -88,7 +84,7 @@ class FilamentDatabaseOpeningHoursServiceProvider extends PackageServiceProvider
         }
 
         // Testing
-        Testable::mixin(new TestsFilamentDatabaseOpeningHours());
+        Testable::mixin(new TestsFilamentDatabaseOpeningHours);
     }
 
     protected function getAssetPackageName(): ?string

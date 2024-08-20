@@ -1,20 +1,23 @@
 <?php
 
-namespace VendorName\Skeleton;
+declare(strict_types=1);
+
+namespace Datomatic\FilamentDatabaseOpeningHours;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Maartenpaauw\Filament\OpeningHours\Resources\OpeningHourResource;
 
-class SkeletonPlugin implements Plugin
+class FilamentDatabaseOpeningHoursPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton';
+        return 'filament-db-opening-hours';
     }
 
     public function register(Panel $panel): void
     {
-        //
+        $panel->resources([OpeningHourResource::class]);
     }
 
     public function boot(Panel $panel): void

@@ -25,5 +25,4 @@ enum Day: string implements HasLabel
     {
         return trans("filament-db-opening-hours::days.$this->value");
     }
-
 }

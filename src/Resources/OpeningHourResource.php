@@ -44,7 +44,7 @@ final class OpeningHourResource extends Resource
     public static function form(Form $form): Form
     {
         $cases = Day::cases();
-        $offset = array_search(config('filament-db-opening-hours.first_day_of_week'),$cases);
+        $offset = array_search(config('filament-db-opening-hours.first_day_of_week'), $cases);
         $cases = array_merge(array_slice($cases, $offset), array_slice($cases, 0, $offset));
 
         return $form
@@ -66,7 +66,7 @@ final class OpeningHourResource extends Resource
                                     ->minLength(1)
                                     ->maxLength(255),
                             ])->visible(config('filament-db-opening-hours.general_description')),
-                        ...array_map(fn($day) => self::dayTab($day), $cases),
+                        ...array_map(fn ($day) => self::dayTab($day), $cases),
                         Tab::make('exceptions')
                             ->label('filament-db-opening-hours::labels.exceptions')
                             ->translateLabel()
@@ -81,16 +81,16 @@ final class OpeningHourResource extends Resource
                                     ->relationship('exceptions')
                                     ->schema([
                                         Group::make([
-                                        TextInput::make('description')
-                                            ->label('filament-db-opening-hours::labels.description')
-                                            ->translateLabel()
-                                            ->minLength(1)
-                                            ->maxLength(255)
-                                            ->visible(config('filament-db-opening-hours.exception_description')),
-                                        DatePicker::make('date')
-                                            ->label('filament-db-opening-hours::labels.date')
-                                            ->translateLabel()
-                                            ->required()
+                                            TextInput::make('description')
+                                                ->label('filament-db-opening-hours::labels.description')
+                                                ->translateLabel()
+                                                ->minLength(1)
+                                                ->maxLength(255)
+                                                ->visible(config('filament-db-opening-hours.exception_description')),
+                                            DatePicker::make('date')
+                                                ->label('filament-db-opening-hours::labels.date')
+                                                ->translateLabel()
+                                                ->required(),
                                         ])->columns(2),
                                         self::timeRangeRepeater(),
                                     ]),

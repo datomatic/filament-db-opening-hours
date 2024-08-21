@@ -18,4 +18,4 @@ return [
     'opening_hours' => 'Orari di apertura',
     'start' => 'Inizio',
     'time_ranges' => 'Intervalli di tempo',
-];;
+];

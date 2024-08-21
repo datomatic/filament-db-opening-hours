@@ -9,12 +9,17 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Datomatic\DatabaseOpeningHours\Models\Day;
+use Datomatic\DatabaseOpeningHours\Models\Exception;
 use Datomatic\FilamentDatabaseOpeningHours\Commands\FilamentDatabaseOpeningHoursCommand;
 use Datomatic\FilamentDatabaseOpeningHours\Testing\TestsFilamentDatabaseOpeningHours;
+
+
 
 class FilamentDatabaseOpeningHoursServiceProvider extends PackageServiceProvider
 {

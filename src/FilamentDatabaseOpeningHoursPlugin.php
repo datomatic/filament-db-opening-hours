@@ -6,7 +6,7 @@ namespace Datomatic\FilamentDatabaseOpeningHours;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Maartenpaauw\Filament\OpeningHours\Resources\OpeningHourResource;
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 
 class FilamentDatabaseOpeningHoursPlugin implements Plugin
 {

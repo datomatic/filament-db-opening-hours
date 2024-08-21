@@ -15,12 +15,12 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Datomatic\DatabaseOpeningHours\Enums\Day;
+use Datomatic\FilamentDatabaseOpeningHours\Enums\Day;
 use Datomatic\DatabaseOpeningHours\Models\OpeningHour;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\CreateOpeningHour;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\EditOpeningHour;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\ListOpeningHours;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages\ViewOpeningHour;
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\CreateOpeningHour;
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\EditOpeningHour;
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\ListOpeningHours;
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\ViewOpeningHour;
 
 final class OpeningHourResource extends Resource
 {

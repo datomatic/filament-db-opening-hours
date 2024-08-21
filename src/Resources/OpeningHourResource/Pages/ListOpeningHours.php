@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages;
+namespace Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages;
 
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource;
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 
 final class ListOpeningHours extends ListRecords
 {

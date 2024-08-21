@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource\Pages;
+namespace Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages;
 
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use Datomatic\DatabaseOpeningHours\Resources\OpeningHourResource;
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 
 final class EditOpeningHour extends EditRecord
 {

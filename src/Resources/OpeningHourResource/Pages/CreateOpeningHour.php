@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages;
 
-use Filament\Resources\Pages\CreateRecord;
 use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
+use Filament\Resources\Pages\CreateRecord;
 
 final class CreateOpeningHour extends CreateRecord
 {

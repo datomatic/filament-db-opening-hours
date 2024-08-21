@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages;
 
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 
 final class EditOpeningHour extends EditRecord
 {

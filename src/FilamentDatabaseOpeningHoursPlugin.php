@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Datomatic\FilamentDatabaseOpeningHours;
 
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 
 class FilamentDatabaseOpeningHoursPlugin implements Plugin
 {

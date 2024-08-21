@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages;
 
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
-use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
 
 final class ViewOpeningHour extends ViewRecord
 {

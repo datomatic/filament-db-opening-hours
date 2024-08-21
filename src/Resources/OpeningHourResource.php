@@ -12,6 +12,7 @@ use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\L
 use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\ViewOpeningHour;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
@@ -32,16 +33,20 @@ final class OpeningHourResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return trans('filament-opening-hours::labels.opening_hour');
+        return trans('filament-db-opening-hours::labels.opening_hour');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return trans('filament-opening-hours::labels.opening_hours');
+        return trans('filament-db-opening-hours::labels.opening_hours');
     }
 
     public static function form(Form $form): Form
     {
+        $cases = Day::cases();
+        $offset = array_search(config('filament-db-opening-hours.first_day_of_week'),$cases);
+        $cases = array_merge(array_slice($cases, $offset), array_slice($cases, 0, $offset));
+
         return $form
             ->schema([
                 Tabs::make('opening-hours')
@@ -50,46 +55,43 @@ final class OpeningHourResource extends Resource
                     ->tabs([
                         Tab::make('general')
                             ->id('general')
-                            ->label('filament-opening-hours::labels.general')
+                            ->label('filament-db-opening-hours::labels.general')
                             ->translateLabel()
                             ->icon('heroicon-o-building-storefront')
                             ->schema([
                                 TextInput::make('name')
-                                    ->label('filament-opening-hours::labels.name')
+                                    ->label('filament-db-opening-hours::labels.name')
                                     ->translateLabel()
                                     ->required()
                                     ->minLength(1)
                                     ->maxLength(255),
-                            ]),
-                        self::dayTab(Day::Monday),
-                        self::dayTab(Day::Tuesday),
-                        self::dayTab(Day::Wednesday),
-                        self::dayTab(Day::Thursday),
-                        self::dayTab(Day::Friday),
-                        self::dayTab(Day::Saturday),
-                        self::dayTab(Day::Sunday),
+                            ])->visible(config('filament-db-opening-hours.general_description')),
+                        ...array_map(fn($day) => self::dayTab($day), $cases),
                         Tab::make('exceptions')
-                            ->label('filament-opening-hours::labels.exceptions')
+                            ->label('filament-db-opening-hours::labels.exceptions')
                             ->translateLabel()
                             ->icon('heroicon-o-exclamation-triangle')
                             ->schema([
                                 Repeater::make('exception')
-                                    ->label('filament-opening-hours::labels.exception')
+                                    ->label('filament-db-opening-hours::labels.exception')
                                     ->translateLabel()
                                     ->minItems(0)
                                     ->defaultItems(0)
-                                    ->addActionLabel(trans('filament-opening-hours::labels.add_exception'))
+                                    ->addActionLabel(trans('filament-db-opening-hours::labels.add_exception'))
                                     ->relationship('exceptions')
                                     ->schema([
+                                        Group::make([
                                         TextInput::make('description')
-                                            ->label('filament-opening-hours::labels.description')
+                                            ->label('filament-db-opening-hours::labels.description')
                                             ->translateLabel()
                                             ->minLength(1)
-                                            ->maxLength(255),
+                                            ->maxLength(255)
+                                            ->visible(config('filament-db-opening-hours.exception_description')),
                                         DatePicker::make('date')
-                                            ->label('filament-opening-hours::labels.date')
+                                            ->label('filament-db-opening-hours::labels.date')
                                             ->translateLabel()
-                                            ->required(),
+                                            ->required()
+                                        ])->columns(2),
                                         self::timeRangeRepeater(),
                                     ]),
                             ]),
@@ -102,22 +104,23 @@ final class OpeningHourResource extends Resource
     {
         return Tab::make($day->label())
             ->label($day->label())
-            ->id($day->toString())
+            ->id($day->value)
             ->translateLabel()
             ->icon('heroicon-o-calendar-days')
             ->schema([
                 Grid::make()
-                    ->relationship($day->relationship())
+                    ->relationship($day->value)
                     ->mutateRelationshipDataBeforeCreateUsing(static fn () => [
                         'day' => $day,
                     ])
                     ->columns(1)
                     ->schema([
                         TextInput::make('description')
-                            ->label('filament-opening-hours::labels.description')
+                            ->label('filament-db-opening-hours::labels.description')
                             ->translateLabel()
                             ->minLength(1)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->visible(config('filament-db-opening-hours.day_description')),
                         self::timeRangeRepeater(),
                     ]),
             ]);
@@ -126,27 +129,30 @@ final class OpeningHourResource extends Resource
     private static function timeRangeRepeater(): Repeater
     {
         return Repeater::make('timeRanges')
-            ->label('filament-opening-hours::labels.time_ranges')
-            ->addActionLabel(trans('filament-opening-hours::labels.add_time_range'))
+            ->label('filament-db-opening-hours::labels.time_ranges')
+            ->addActionLabel(trans('filament-db-opening-hours::labels.add_time_range'))
             ->translateLabel()
             ->relationship()
+            ->reorderable(true)
             ->defaultItems(0)
             ->minItems(0)
+            ->grid(2)
             ->schema([
                 TextInput::make('description')
-                    ->label('filament-opening-hours::labels.description')
+                    ->label('filament-db-opening-hours::labels.description')
                     ->translateLabel()
                     ->minLength(1)
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->visible(config('filament-db-opening-hours.time_range_description')),
                 Grid::make()
                     ->schema([
                         TimePicker::make('start')
-                            ->label('filament-opening-hours::labels.start')
+                            ->label('filament-db-opening-hours::labels.start')
                             ->translateLabel()
                             ->seconds(false)
                             ->required(),
                         TimePicker::make('end')
-                            ->label('filament-opening-hours::labels.end')
+                            ->label('filament-db-opening-hours::labels.end')
                             ->translateLabel()
                             ->seconds(false)
                             ->required(),

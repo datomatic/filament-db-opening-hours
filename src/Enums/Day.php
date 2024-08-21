@@ -8,13 +8,13 @@ use Filament\Support\Contracts\HasLabel;
 
 enum Day: string implements HasLabel
 {
-    case Monday = 'monday';
-    case Tuesday = 'tuesday';
-    case Wednesday = 'wednesday';
-    case Thursday = 'thursday';
-    case Friday = 'friday';
-    case Saturday = 'saturday';
-    case Sunday = 'sunday';
+    case MONDAY = 'monday';
+    case TUESDAY = 'tuesday';
+    case WEDNESDAY = 'wednesday';
+    case THURSDAY = 'thursday';
+    case FRIDAY = 'friday';
+    case SATURDAY = 'saturday';
+    case SUNDAY = 'sunday';
 
     public function getLabel(): ?string
     {
@@ -23,16 +23,7 @@ enum Day: string implements HasLabel
 
     public function label(): string
     {
-        return trans("filament-opening-hours::days.$this->value");
+        return trans("filament-db-opening-hours::days.$this->value");
     }
 
-    public function relationship(): string
-    {
-        return $this->value;
-    }
-
-    public function toString(): string
-    {
-        return $this->value;
-    }
 }

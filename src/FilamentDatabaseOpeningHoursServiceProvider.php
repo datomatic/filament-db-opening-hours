@@ -29,6 +29,4 @@ class FilamentDatabaseOpeningHoursServiceProvider extends PackageServiceProvider
         // Testing
         Testable::mixin(new TestsFilamentDatabaseOpeningHours);
     }
-
-
 }

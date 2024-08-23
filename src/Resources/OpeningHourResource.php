@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Datomatic\FilamentDatabaseOpeningHours\Resources;
 
+use Datomatic\DatabaseOpeningHours\Enums\Day;
 use Datomatic\DatabaseOpeningHours\Models\OpeningHour;
-use Datomatic\FilamentDatabaseOpeningHours\Enums\Day;
 use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\CreateOpeningHour;
 use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\EditOpeningHour;
 use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Pages\ListOpeningHours;

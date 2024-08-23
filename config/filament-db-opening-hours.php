@@ -16,6 +16,6 @@ return [
     'exception_description' => false,
 
     // first day of week
-    'first_day_of_week' => \Datomatic\FilamentDatabaseOpeningHours\Enums\Day::MONDAY,
+    'first_day_of_week' => \Datomatic\DatabaseOpeningHours\Enums\Day::MONDAY,
 
 ];

@@ -133,7 +133,7 @@ final class OpeningHourResource extends Resource
             ->addActionLabel(trans('filament-db-opening-hours::labels.add_time_range'))
             ->translateLabel()
             ->collapsible()
-            ->collapsed(fn ($state) => @$state['id'])
+            ->collapsed(fn ($state) => empty($state['id']))
             ->itemLabel(fn (array $state): ?string => $state['start'] . ' - ' . $state['end'])
             ->relationship()
             ->reorderable(true)

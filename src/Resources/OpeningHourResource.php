@@ -66,7 +66,7 @@ final class OpeningHourResource extends Resource
                                     ->minLength(1)
                                     ->maxLength(255),
                             ])->visible(config('filament-db-opening-hours.general_description')),
-                        ...array_map(fn ($day) => self::dayTab($day), $cases),
+                        ...array_map(fn($day) => self::dayTab($day), $cases),
                         Tab::make('exceptions')
                             ->label('filament-db-opening-hours::labels.exceptions')
                             ->translateLabel()
@@ -110,7 +110,7 @@ final class OpeningHourResource extends Resource
             ->schema([
                 Grid::make()
                     ->relationship($day->value)
-                    ->mutateRelationshipDataBeforeCreateUsing(static fn () => [
+                    ->mutateRelationshipDataBeforeCreateUsing(static fn() => [
                         'day' => $day,
                     ])
                     ->columns(1)
@@ -133,8 +133,8 @@ final class OpeningHourResource extends Resource
             ->addActionLabel(trans('filament-db-opening-hours::labels.add_time_range'))
             ->translateLabel()
             ->collapsible()
-            ->collapsed(fn ($state) => empty($state['id']))
-            ->itemLabel(fn (array $state): ?string => $state['start'] . ' - ' . $state['end'])
+            ->collapsed(fn($state) => empty($state['id']))
+            ->itemLabel(fn(array $state): ?string => $state['start'] ? ($state['start'].' - '.$state['end']) : '')
             ->relationship()
             ->reorderable(true)
             ->defaultItems(0)

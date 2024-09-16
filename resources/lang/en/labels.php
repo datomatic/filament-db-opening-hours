@@ -9,6 +9,7 @@ return [
     'day' => 'Day',
     'days' => 'Days',
     'description' => 'Description',
+    'edit' => 'Edit',
     'end' => 'End',
     'exception' => 'Exception',
     'exceptions' => 'Exceptions',

@@ -9,6 +9,7 @@ return [
     'day' => 'Dag',
     'days' => 'Dagen',
     'description' => 'Omschrijving',
+    'edit' => 'Gewijzigd',
     'end' => 'Eind',
     'exception' => 'Uitzondering',
     'exceptions' => 'Uitzonderingen',

@@ -46,71 +46,77 @@ final class OpeningHourResource extends Resource
         return trans('filament-db-opening-hours::labels.opening_hours');
     }
 
-    public static function form(Form $form): Form
+    public static function schema(): array
     {
         $cases = Day::cases();
         $offset = array_search(config('filament-db-opening-hours.first_day_of_week'), $cases);
         $cases = array_merge(array_slice($cases, $offset), array_slice($cases, 0, $offset));
 
+        return [
+            Tabs::make('opening-hours')
+                ->id('opening-hours')
+                ->persistTabInQueryString()
+                ->tabs([
+                    Tab::make('general')
+                        ->id('general')
+                        ->label('filament-db-opening-hours::labels.general')
+                        ->translateLabel()
+                        ->icon('heroicon-o-building-storefront')
+                        ->schema([
+                            TextInput::make('name')
+                                ->label('filament-db-opening-hours::labels.name')
+                                ->translateLabel()
+                                ->required()
+                                ->minLength(1)
+                                ->maxLength(255),
+                        ])->visible(config('filament-db-opening-hours.general_description')),
+                    ...array_map(fn ($day) => self::dayTab($day), $cases),
+                    Tab::make('exceptions')
+                        ->label('filament-db-opening-hours::labels.exceptions')
+                        ->translateLabel()
+                        ->icon('heroicon-o-exclamation-triangle')
+                        ->schema([
+                            Repeater::make('exception')
+                                ->columns(2)
+                                ->collapsed()
+                                ->hiddenLabel()
+                                // TODO: maybe description as well?
+                                ->itemLabel(fn (array $state) => $state['date'])
+
+                                ->label('filament-db-opening-hours::labels.exception')
+                                ->translateLabel()
+                                ->minItems(0)
+                                ->defaultItems(0)
+                                ->addActionLabel(trans('filament-db-opening-hours::labels.add_exception'))
+                                ->relationship('exceptions')
+                                ->schema([
+                                    TextInput::make('description')
+                                        ->hiddenLabel()
+
+                                        ->label('filament-db-opening-hours::labels.description')
+                                        ->translateLabel()
+                                        ->minLength(1)
+                                        ->maxLength(255)
+                                        ->visible(config('filament-db-opening-hours.exception_description')),
+                                    DatePicker::make('date')
+                                        ->hiddenLabel()
+
+                                        ->label('filament-db-opening-hours::labels.date')
+                                        ->translateLabel()
+                                        ->required(),
+                                    self::timeRangeRepeater(),
+                                ]),
+                        ]),
+                ]),
+        ];
+    }
+
+    public static function form(Form $form): Form
+    {
         return $form
-            ->schema([
-                Tabs::make('opening-hours')
-                    ->id('opening-hours')
-                    ->persistTabInQueryString()
-                    ->tabs([
-                        Tab::make('general')
-                            ->id('general')
-                            ->label('filament-db-opening-hours::labels.general')
-                            ->translateLabel()
-                            ->icon('heroicon-o-building-storefront')
-                            ->schema([
-                                TextInput::make('name')
-                                    ->label('filament-db-opening-hours::labels.name')
-                                    ->translateLabel()
-                                    ->required()
-                                    ->minLength(1)
-                                    ->maxLength(255),
-                            ])->visible(config('filament-db-opening-hours.general_description')),
-                        ...array_map(fn ($day) => self::dayTab($day), $cases),
-                        Tab::make('exceptions')
-                            ->label('filament-db-opening-hours::labels.exceptions')
-                            ->translateLabel()
-                            ->icon('heroicon-o-exclamation-triangle')
-                            ->schema([
-                                Repeater::make('exception')
-                                    ->columns(2)
-                                    ->collapsed()
-                                    ->hiddenLabel()
-                                    // TODO: maybe description as well?
-                                    ->itemLabel(fn (array $state) => $state['date'])
-
-                                    ->label('filament-db-opening-hours::labels.exception')
-                                    ->translateLabel()
-                                    ->minItems(0)
-                                    ->defaultItems(0)
-                                    ->addActionLabel(trans('filament-db-opening-hours::labels.add_exception'))
-                                    ->relationship('exceptions')
-                                    ->schema([
-                                        TextInput::make('description')
-                                            ->hiddenLabel()
-
-                                            ->label('filament-db-opening-hours::labels.description')
-                                            ->translateLabel()
-                                            ->minLength(1)
-                                            ->maxLength(255)
-                                            ->visible(config('filament-db-opening-hours.exception_description')),
-                                        DatePicker::make('date')
-                                            ->hiddenLabel()
-
-                                            ->label('filament-db-opening-hours::labels.date')
-                                            ->translateLabel()
-                                            ->required(),
-                                        self::timeRangeRepeater(),
-                                    ]),
-                            ]),
-                    ]),
-            ])
-            ->columns(1);
+            ->schema(
+                self::schema()
+            );
     }
 
     private static function dayTab(Day $day): Tab
@@ -141,8 +147,7 @@ final class OpeningHourResource extends Resource
 
     private static function timeRangeRepeater(): Repeater
     {
-        return TableRepeater::make('timeRanges')
-            ->emptyLabel(' ')
+        return Repeater::make('timeRanges')
             ->hiddenLabel()
             ->addAction(function (Action $action) {
                 return $action
@@ -190,6 +195,7 @@ final class OpeningHourResource extends Resource
 
                         $component->callAfterStateUpdated();
                     })
+                    ->modalHeading(__('filament-db-opening-hours::labels.edit'))
                     ->modalWidth(MaxWidth::FourExtraLarge)
 
                     ->fillForm(function (array $arguments, $state) {
@@ -209,7 +215,7 @@ final class OpeningHourResource extends Resource
             ->schema([
                 Hidden::make('start')->dehydrated(true),
                 Hidden::make('end')->dehydrated(true),
-                Placeholder::make('item')->content(fn ($record, $get) => Carbon::parse($get('start'))
+                Placeholder::make('item')->content(fn ($get) => Carbon::parse($get('start'))
                     ->timezone(config('app.timezone'))
                     ->format('H:i') . ' - ' . Carbon::parse($get('end'))
                     ->timezone(config('app.timezone'))

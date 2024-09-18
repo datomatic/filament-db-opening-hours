@@ -14,6 +14,7 @@ return [
     'exception' => 'Exception',
     'exceptions' => 'Exceptions',
     'general' => 'General',
+    'hours' => 'Hours',
     'name' => 'Name',
     'opening_hour' => 'Opening hour',
     'opening_hours' => 'Opening hours',

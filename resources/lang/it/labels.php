@@ -14,6 +14,7 @@ return [
     'exception' => 'Eccezione',
     'exceptions' => 'Eccezioni',
     'general' => 'Generale',
+    'hours' => 'Orario',
     'name' => 'Nome',
     'opening_hour' => 'Orario di apertura',
     'opening_hours' => 'Orari di apertura',

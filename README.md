@@ -1,54 +1,160 @@
-# This is my package filament-db-opening-hours
+# Manage database opening hours in Filament
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/datomatic/filament-db-opening-hours.svg?style=flat-square)](https://packagist.org/packages/datomatic/filament-db-opening-hours)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/filament-db-opening-hours/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/datomatic/filament-db-opening-hours/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/filament-db-opening-hours/fix-php-code-styling.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/datomatic/filament-db-opening-hours/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/filament-db-opening-hours/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/datomatic/filament-db-opening-hours/actions?query=workflow%3A"Fix+PHP+Code+Styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/datomatic/filament-db-opening-hours.svg?style=flat-square)](https://packagist.org/packages/datomatic/filament-db-opening-hours)
 
+A [Filament](https://filamentphp.com) plugin to create and edit opening hours stored with [`datomatic/db-opening-hours`](https://github.com/datomatic/db-opening-hours): a weekly schedule with multiple time ranges per day, plus date exceptions (holidays, special openings).
 
+It adds an **Opening hours** resource to your panel with one tab per weekday and a tab for the exceptions.
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+## Requirements
+
+| Package | Version |
+|---------|---------|
+| PHP | 8.2 – 8.6 |
+| Laravel | 12, 13 |
+| Filament | 5 |
+| `datomatic/db-opening-hours` | ^1.1 |
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
 composer require datomatic/filament-db-opening-hours
 ```
 
-You can publish and run the migrations with:
+Run the migrations of `datomatic/db-opening-hours` (they are loaded automatically):
 
 ```bash
-php artisan vendor:publish --tag="filament-db-opening-hours-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+Optionally publish the config file:
 
 ```bash
 php artisan vendor:publish --tag="filament-db-opening-hours-config"
 ```
 
-Optionally, you can publish the views using
+Optionally publish the translations (English, Italian and Dutch are included):
 
 ```bash
-php artisan vendor:publish --tag="filament-db-opening-hours-views"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
+php artisan vendor:publish --tag="filament-db-opening-hours-translations"
 ```
 
 ## Usage
 
+Register the plugin on your panel:
+
 ```php
-$filamentDatabaseOpeningHours = new Datomatic\FilamentDatabaseOpeningHours();
-echo $filamentDatabaseOpeningHours->echoPhrase('Hello, Datomatic!');
+use Datomatic\FilamentDatabaseOpeningHours\FilamentDatabaseOpeningHoursPlugin;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->plugin(FilamentDatabaseOpeningHoursPlugin::make());
+}
 ```
+
+### Navigation
+
+```php
+use Filament\Support\Icons\Heroicon;
+
+FilamentDatabaseOpeningHoursPlugin::make()
+    ->navigationGroup('Settings')
+    ->navigationIcon(Heroicon::OutlinedClock)
+    ->navigationSort(10);
+```
+
+### Custom resource
+
+Extend the resource to change anything (authorization, extra columns, a different model…) and register your class instead:
+
+```php
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource;
+
+class MyOpeningHourResource extends OpeningHourResource
+{
+    // ...
+}
+
+FilamentDatabaseOpeningHoursPlugin::make()
+    ->resource(MyOpeningHourResource::class);
+```
+
+The resource uses the model configured in `db-opening-hours.models.opening_hour`, so a model swapped through the `db-opening-hours` config is picked up automatically.
+
+### Saving the schedule from your own code
+
+The form is persisted by `Datomatic\FilamentDatabaseOpeningHours\Support\OpeningHourSchedule`, which you can also use directly (for example from a custom page or an action). Every write runs in a database transaction, and removing a weekday or an exception also removes its time ranges.
+
+```php
+use Datomatic\FilamentDatabaseOpeningHours\Support\OpeningHourSchedule;
+
+$schedule = app(OpeningHourSchedule::class);
+
+$openingHour = $schedule->create([
+    'name' => 'Main shop',
+    'days' => [
+        'monday' => [
+            'time_ranges' => [
+                ['start' => '09:00', 'end' => '13:00'],
+                ['start' => '14:00', 'end' => '18:00'],
+            ],
+        ],
+    ],
+    'exceptions' => [
+        ['date' => '2026-12-25', 'description' => 'Christmas', 'time_ranges' => []],
+    ],
+]);
+
+// Only the keys you pass are synced: this replaces the exceptions and keeps the weekly days.
+$schedule->update($openingHour, ['exceptions' => []]);
+
+$schedule->toFormState($openingHour); // the same shape, as used by the form
+$schedule->delete($openingHour);      // removes days, exceptions and time ranges too
+```
+
+Notes:
+
+- A weekday is stored only when it has at least one time range or a description.
+- An exception without time ranges is kept: it marks that date as **closed**.
+- Exceptions are matched by date, so the same date cannot be added twice.
+
+## Config
+
+```php
+use Datomatic\DatabaseOpeningHours\Enums\Day;
+
+return [
+    // Show the "General" tab with a (required) name field, useful when a model holds more than one schedule
+    'general_description' => false,
+
+    // Show a description field for each weekday
+    'day_description' => false,
+
+    // Show a description field for each time range
+    'time_range_description' => false,
+
+    // Show a description field for each date exception
+    'exception_description' => false,
+
+    // The weekday shown as the first tab of the form
+    'first_day_of_week' => Day::MONDAY,
+];
+```
+
+## Upgrading from 0.x
+
+Version 1 requires Filament 5 and `datomatic/db-opening-hours` ^1.1.
+
+- The resource and its pages are no longer `final`, so they can be extended.
+- Days and exceptions are saved through `OpeningHourSchedule` instead of Filament relationship components: deleting a day, an exception or a whole schedule no longer leaves orphaned time ranges behind.
+- The Tailwind/PostCSS configuration files were removed: the plugin ships no custom views.
 
 ## Testing
 

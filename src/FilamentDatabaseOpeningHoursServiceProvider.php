@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Datomatic\FilamentDatabaseOpeningHours;
 
 use Datomatic\FilamentDatabaseOpeningHours\Testing\TestsFilamentDatabaseOpeningHours;
@@ -17,7 +19,7 @@ class FilamentDatabaseOpeningHoursServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
             ->hasConfigFile()
             ->hasTranslations()
-            ->hasInstallCommand(function (InstallCommand $command) {
+            ->hasInstallCommand(static function (InstallCommand $command): void {
                 $command
                     ->publishConfigFile()
                     ->askToStarRepoOnGitHub('datomatic/filament-db-opening-hours');
@@ -26,7 +28,6 @@ class FilamentDatabaseOpeningHoursServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        // Testing
         Testable::mixin(new TestsFilamentDatabaseOpeningHours);
     }
 }

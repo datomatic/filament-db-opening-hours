@@ -1,35 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Datomatic\FilamentDatabaseOpeningHours\Tests;
 
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
+use Datomatic\DatabaseOpeningHours\DatabaseOpeningHoursServiceProvider;
 use Datomatic\FilamentDatabaseOpeningHours\FilamentDatabaseOpeningHoursServiceProvider;
+use Datomatic\FilamentDatabaseOpeningHours\Tests\TestSupport\AdminPanelProvider;
+use Datomatic\FilamentDatabaseOpeningHours\Tests\TestSupport\Models\User;
 use Filament\Actions\ActionsServiceProvider;
 use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
 use Filament\Infolists\InfolistsServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
+use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
 
 class TestCase extends Orchestra
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Datomatic\\FilamentDatabaseOpeningHours\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
-        );
+        $this->actingAs(User::create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => 'password',
+        ]));
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             ActionsServiceProvider::class,
@@ -41,20 +51,25 @@ class TestCase extends Orchestra
             InfolistsServiceProvider::class,
             LivewireServiceProvider::class,
             NotificationsServiceProvider::class,
+            SchemasServiceProvider::class,
             SupportServiceProvider::class,
             TablesServiceProvider::class,
             WidgetsServiceProvider::class,
+            DatabaseOpeningHoursServiceProvider::class,
             FilamentDatabaseOpeningHoursServiceProvider::class,
+            AdminPanelProvider::class,
         ];
     }
 
-    public function getEnvironmentSetUp($app)
+    protected function defineEnvironment($app): void
     {
-        config()->set('database.default', 'testing');
+        $app['config']->set('app.key', 'base64:' . base64_encode(str_repeat('a', 32)));
+        $app['config']->set('database.default', 'testing');
+        $app['config']->set('auth.providers.users.model', User::class);
+    }
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_filament-db-opening-hours_table.php.stub';
-        $migration->up();
-        */
+    protected function defineDatabaseMigrations(): void
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/TestSupport/database/migrations');
     }
 }

@@ -1,21 +1,35 @@
 <?php
 
-// config for Datomatic/FilamentDatabaseOpeningHours
+declare(strict_types=1);
+
+use Datomatic\DatabaseOpeningHours\Enums\Day;
+
 return [
 
-    // text description to define an opening hours, used if you have multiple opening hours for a resource
+    /*
+     * Show the "General" tab with a name field, useful when a model holds more
+     * than one schedule (e.g. seasonal opening hours).
+     */
     'general_description' => false,
 
-    // text description to define a day opening hours
+    /*
+     * Show a description field for each weekday.
+     */
     'day_description' => false,
 
-    // text description to define a time range hours
+    /*
+     * Show a description field for each time range.
+     */
     'time_range_description' => false,
 
-    // text description to define an exception
+    /*
+     * Show a description field for each date exception.
+     */
     'exception_description' => false,
 
-    // first day of week
-    'first_day_of_week' => \Datomatic\DatabaseOpeningHours\Enums\Day::MONDAY,
+    /*
+     * The weekday shown as the first tab of the form.
+     */
+    'first_day_of_week' => Day::MONDAY,
 
 ];

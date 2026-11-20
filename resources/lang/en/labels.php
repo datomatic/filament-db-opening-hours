@@ -14,8 +14,10 @@ return [
     'exceptions' => 'Exceptions',
     'general' => 'General',
     'name' => 'Name',
+    'openable' => 'Linked to',
     'opening_hour' => 'Opening hour',
     'opening_hours' => 'Opening hours',
     'start' => 'Start',
     'time_ranges' => 'Time ranges',
+    'updated_at' => 'Updated at',
 ];

@@ -9,17 +9,33 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    env:
+      # Composer 2.9 blocks old releases with advisories, which breaks prefer-lowest jobs
+      COMPOSER_NO_SECURITY_BLOCKING: 1
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        php: [8.2, 8.1]
-        laravel: [10.*]
+        php: [8.6, 8.5, 8.4, 8.3, 8.2]
+        laravel: [13.*, 12.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 10.*
-            testbench: 8.*
-            carbon: 2.*
+          - laravel: 13.*
+            testbench: 11.*
+          - laravel: 12.*
+            testbench: 10.*
+        exclude:
+          # Laravel 13 requires PHP >= 8.3
+          - laravel: 13.*
+            php: 8.2
+          # Laravel 12 still triggers PHP 8.6 deprecations inside the framework
+          - laravel: 12.*
+            php: 8.6
+          # Lowest dependency versions predate PHP 8.6
+          - php: 8.6
+            stability: prefer-lowest
+          - os: windows-latest
+            stability: prefer-lowest
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -41,11 +57,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:${{ matrix.carbon }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
 
       - name: Execute tests
-        run: vendor/bin/pest --ci
+        run: vendor/bin/pest --ci --no-coverage

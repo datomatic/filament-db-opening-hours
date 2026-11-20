@@ -14,8 +14,10 @@ return [
     'exceptions' => 'Eccezioni',
     'general' => 'Generale',
     'name' => 'Nome',
+    'openable' => 'Collegato a',
     'opening_hour' => 'Orario di apertura',
     'opening_hours' => 'Orari di apertura',
     'start' => 'Inizio',
     'time_ranges' => 'Intervalli di tempo',
+    'updated_at' => 'Aggiornato il',
 ];

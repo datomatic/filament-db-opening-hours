@@ -1,9 +1,9 @@
 # Manage database opening hours in Filament
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/datomatic/filament-db-opening-hours.svg?style=flat-square)](https://packagist.org/packages/datomatic/filament-db-opening-hours)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/filament-db-opening-hours/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/datomatic/filament-db-opening-hours/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/filament-db-opening-hours/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/datomatic/filament-db-opening-hours/actions?query=workflow%3A"Fix+PHP+Code+Styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/datomatic/filament-db-opening-hours.svg?style=flat-square)](https://packagist.org/packages/datomatic/filament-db-opening-hours)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/datomatic/filament-db-opening-hours.svg?style=for-the-badge)](https://packagist.org/packages/datomatic/filament-db-opening-hours)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/filament-db-opening-hours/run-tests.yml?branch=main&label=tests&color=5FE8B3&style=for-the-badge)](https://github.com/datomatic/filament-db-opening-hours/actions/workflows/run-tests.yml)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/filament-db-opening-hours/fix-php-code-style-issues.yml?branch=main&label=code%20style&color=5FE8B3&style=for-the-badge)](https://github.com/datomatic/filament-db-opening-hours/actions/workflows/fix-php-code-style-issues.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/datomatic/filament-db-opening-hours.svg?style=for-the-badge)](https://packagist.org/packages/datomatic/filament-db-opening-hours)
 
 A [Filament](https://filamentphp.com) plugin to create and edit opening hours stored with [`datomatic/db-opening-hours`](https://github.com/datomatic/db-opening-hours): a weekly schedule with multiple time ranges per day, plus date exceptions (holidays, special openings).
 

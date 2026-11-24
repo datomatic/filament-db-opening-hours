@@ -88,6 +88,46 @@ FilamentDatabaseOpeningHoursPlugin::make()
 
 The resource uses the model configured in `db-opening-hours.models.opening_hour`, so a model swapped through the `db-opening-hours` config is picked up automatically.
 
+### Embedding the schedule in another form
+
+The resource is optional. To edit a schedule inside another form, for example in a section of a model's edit page, use `OpeningHourForm::scheduleTabs()`. It returns the weekday and exception tabs without the "General" tab. Set a `statePath()` on the parent component, then load and save the state with `OpeningHourSchedule` (see below):
+
+```php
+use Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Schemas\OpeningHourForm;
+use Filament\Schemas\Components\Section;
+
+Section::make('Opening hours')
+    ->statePath('opening_hours')
+    ->schema([
+        OpeningHourForm::scheduleTabs('opening-hours'),
+    ]);
+```
+
+```php
+// In the edit page of the model
+protected function mutateFormDataBeforeFill(array $data): array
+{
+    $data['opening_hours'] = app(OpeningHourSchedule::class)->toFormState($this->getRecord()->openingHour);
+
+    return $data;
+}
+
+// The schedule is not a column of the model
+protected function mutateFormDataBeforeSave(array $data): array
+{
+    unset($data['opening_hours']);
+
+    return $data;
+}
+
+protected function afterSave(): void
+{
+    app(OpeningHourSchedule::class)->update($this->getRecord()->openingHour, $this->data['opening_hours']);
+}
+```
+
+Use a different id for each schedule on the same page: the id is also the query string key that keeps the active tab. If you only embed the schedule, you do not need to register the plugin on the panel.
+
 ### Saving the schedule from your own code
 
 The form is persisted by `Datomatic\FilamentDatabaseOpeningHours\Support\OpeningHourSchedule`, which you can also use directly (for example from a custom page or an action). Every write runs in a database transaction, and removing a weekday or an exception also removes its time ranges.

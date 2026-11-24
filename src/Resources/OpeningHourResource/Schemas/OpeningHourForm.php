@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Datomatic\FilamentDatabaseOpeningHours\Resources\OpeningHourResource\Schemas;
 
 use Datomatic\DatabaseOpeningHours\Enums\Day;
+use Datomatic\FilamentDatabaseOpeningHours\Support\OpeningHourSchedule;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
@@ -23,17 +24,49 @@ class OpeningHourForm
     {
         return $schema
             ->components([
-                Tabs::make('opening-hours')
-                    ->id('opening-hours')
-                    ->persistTabInQueryString()
-                    ->columnSpanFull()
-                    ->tabs([
-                        self::generalTab(),
-                        ...array_map(self::dayTab(...), self::orderedDays()),
-                        self::exceptionsTab(),
-                    ]),
+                self::tabs('opening-hours', 'tab', [
+                    self::generalTab(),
+                    ...self::scheduleTabsList(),
+                ]),
             ])
             ->columns(1);
+    }
+
+    /**
+     * The weekday and exception tabs, without the "General" tab, to embed the
+     * schedule in another form (for example in a section of a model's edit page).
+     *
+     * The state shape is the one of {@see OpeningHourSchedule::toFormState()}:
+     * set a `statePath()` on the parent component to nest it under a key.
+     * Use a different `$id` for each schedule shown on the same page: it is
+     * also the query string key that keeps the active tab.
+     */
+    public static function scheduleTabs(string $id = 'opening-hours'): Tabs
+    {
+        return self::tabs($id, $id, self::scheduleTabsList());
+    }
+
+    /**
+     * @param  list<Tab>  $tabs
+     */
+    private static function tabs(string $id, string $queryStringKey, array $tabs): Tabs
+    {
+        return Tabs::make($id)
+            ->id($id)
+            ->persistTabInQueryString($queryStringKey)
+            ->columnSpanFull()
+            ->tabs($tabs);
+    }
+
+    /**
+     * @return list<Tab>
+     */
+    private static function scheduleTabsList(): array
+    {
+        return [
+            ...array_map(self::dayTab(...), self::orderedDays()),
+            self::exceptionsTab(),
+        ];
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Datomatic\FilamentDatabaseOpeningHours\Tests;
 
+use Datomatic\FilamentDatabaseOpeningHours\FilamentDatabaseOpeningHoursServiceProvider;
 use Datomatic\FilamentDatabaseOpeningHours\Tests\TestSupport\AdminPanelProvider;
 use Datomatic\FilamentDatabaseOpeningHours\Tests\TestSupport\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,6 +30,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
+            FilamentDatabaseOpeningHoursServiceProvider::class,
             AdminPanelProvider::class,
         ];
     }

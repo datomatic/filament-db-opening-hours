@@ -2,6 +2,10 @@
 
 All notable changes to `filament-db-opening-hours` will be documented in this file.
 
+## v1.1.0 - 2026-11-24
+
+**Full Changelog**: https://github.com/datomatic/filament-db-opening-hours/compare/v1.0.0...v1.1.0
+
 ## v1.0.0 - 2026-11-20
 
 ### Breaking
